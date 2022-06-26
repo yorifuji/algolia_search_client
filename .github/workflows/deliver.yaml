@@ -1,0 +1,17 @@
+name: deliver
+
+on:
+  pull_request:
+    branches:
+      - "releases/**"
+  workflow_dispatch: # manual run
+
+jobs:
+  ios:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Deriver
+        shell: bash
+        run: |
+          echo deriver

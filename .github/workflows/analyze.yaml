@@ -2,9 +2,6 @@ name: analyze
 
 on:
   pull_request:
-    branches:
-      - main
-      - "releases/**"
   workflow_dispatch: # manual run
 
 jobs:
