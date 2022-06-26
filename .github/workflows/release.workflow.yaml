@@ -7,16 +7,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  analyze:
+  analyze-job:
     if: startsWith(github.head_ref, 'releases/')
     uses: ./.github/workflows/analyze.job.yaml
-  test:
+  test-job:
     if: startsWith(github.head_ref, 'releases/')
     uses: ./.github/workflows/test.job.yaml
-  deliver:
+  deliver-job:
     needs: [analyze, test]
     if: startsWith(github.head_ref, 'releases/')
     uses: ./.github/workflows/deliver.job.yaml
     secrets:
       certificate_p12: ${{ secrets.CERTIFICATES_P12 }}
       certificate_password: ${{ secrets.CERTIFICATE_PASSWORD }}
+      provisioning_profile: ${{ secrets.PROVISIONING_PROFILE }}

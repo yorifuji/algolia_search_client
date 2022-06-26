@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  analyze:
+  analyze-job:
     uses: ./.github/workflows/analyze.job.yaml
-  test:
+  test-job:
     uses: ./.github/workflows/test.job.yaml

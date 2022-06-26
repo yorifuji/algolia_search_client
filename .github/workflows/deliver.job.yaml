@@ -7,6 +7,8 @@ on:
         required: true
       certificate_password:
         required: true
+      provisioning_profile:
+        required: true
 
 jobs:
   deliver:
@@ -26,7 +28,7 @@ jobs:
       - name: Import Provisioning Profile
         run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo -n ${{ secrets.PROVISIONING_PROFILE }} | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/distribution.mobileprovision
+          echo -n ${{ secrets.provisioning_profile }} | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/distribution.mobileprovision
 
       - name: Import Distribution Certificates
         uses: Apple-Actions/import-codesign-certs@v1

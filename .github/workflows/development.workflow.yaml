@@ -5,9 +5,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  analyze:
+  analyze-job:
     if: ${{ !startsWith(github.head_ref, 'releases/') }}
     uses: ./.github/workflows/analyze.job.yaml
-  test:
+  test-job:
     if: ${{ !startsWith(github.head_ref, 'releases/') }}
     uses: ./.github/workflows/test.job.yaml
