@@ -1,3 +1,5 @@
+name: job analyze
+
 on:
   workflow_call:
 

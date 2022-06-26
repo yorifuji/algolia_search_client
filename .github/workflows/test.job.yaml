@@ -1,3 +1,5 @@
+name: job test
+
 on:
   workflow_call:
 
