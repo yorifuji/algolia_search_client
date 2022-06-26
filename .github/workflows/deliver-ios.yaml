@@ -6,7 +6,7 @@ on:
       - opened
 
 jobs:
-  run_if:
+  ios:
     if: startsWith(github.head_ref, 'releases/')
     runs-on: ubuntu-latest
     steps:
