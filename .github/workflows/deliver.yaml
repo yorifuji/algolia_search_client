@@ -2,16 +2,18 @@ name: deliver
 
 on:
   pull_request:
-    branches:
-      - "releases/**"
+    types:
+      - opened
   workflow_dispatch: # manual run
 
 jobs:
-  ios:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Deriver
-        shell: bash
-        run: |
-          echo deriver
+  run_if:
+    ios:
+      if: startsWith(github.head_ref, 'releases/')
+      runs-on: ubuntu-latest
+      timeout-minutes: 5
+      steps:
+        - name: Deriver
+          shell: bash
+          run: |
+            echo hello, deriver
