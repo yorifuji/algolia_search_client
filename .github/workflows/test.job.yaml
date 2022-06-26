@@ -1,11 +1,10 @@
-name: analyze
+name: job test
 
 on:
-  pull_request:
-  workflow_dispatch: # manual run
+  workflow_call:
 
 jobs:
-  analyze:
+  test:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -26,5 +25,5 @@ jobs:
         run: flutter --version
       - name: Run flutter pub get
         run: flutter pub get
-      - name: Run flutter analyze
-        run: flutter analyze
+      - name: Run flutter test
+        run: flutter test
