@@ -23,5 +23,4 @@ jobs:
     needs: [analyze-job, test-job]
     if: startsWith(github.head_ref, 'releases/')
     uses: ./.github/workflows/deliver.job.yaml
-    secrets:
-      secrets: inherit
+    secrets: inherit
