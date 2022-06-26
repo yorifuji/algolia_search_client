@@ -8,12 +8,8 @@ on:
 
 jobs:
   ios:
-    run_if:
-      if: startsWith(github.head_ref, 'releases/')
-      runs-on: ubuntu-latest
-      timeout-minutes: 5
-      steps:
-        - name: Deriver
-          shell: bash
-          run: |
-            echo hello, deriver
+    runs-on: ubuntu-18.04
+    if: contains(github.head_ref, 'releases')
+    steps:
+      - name: Deriver
+        run: echo 'Hello, deriver'
