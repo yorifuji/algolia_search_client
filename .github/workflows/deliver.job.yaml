@@ -3,20 +3,6 @@ name: job deliver
 on:
   workflow_call:
     secrets:
-      algolia_application_id:
-        required: true
-      algolia_api_key:
-        required: true
-      certificate_p12:
-        required: true
-      certificate_password:
-        required: true
-      provisioning_profile:
-        required: true
-      apple_id:
-        required: true
-      apple_app_pass:
-        required: true
 
 jobs:
   deliver:
@@ -30,19 +16,19 @@ jobs:
         shell: bash
         run: |
           touch .env
-          echo "APPLICATION_ID=${{ secrets.algolia_application_id }}" >> .env
-          echo "API_KEY=${{ secrets.algolia_api_key }}" >> .env
+          echo "APPLICATION_ID=${{ secrets.APPLICATION_ID }}" >> .env
+          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
 
       - name: Import Provisioning Profile
         run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo -n ${{ secrets.provisioning_profile }} | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/distribution.mobileprovision
+          echo -n ${{ secrets.PROVISIONING_PROFILE }} | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/distribution.mobileprovision
 
       - name: Import Distribution Certificates
         uses: Apple-Actions/import-codesign-certs@v1
         with:
-          p12-file-base64: ${{ secrets.certificate_p12 }}
-          p12-password: ${{ secrets.certificate_password }}
+          p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
+          p12-password: ${{ secrets.CERTIFICATE_PASSWORD }}
 
       - name: Install Flutter
         uses: subosito/flutter-action@v2
@@ -60,4 +46,4 @@ jobs:
         run: flutter build ipa --export-options-plist=./ios/ExportOptions.plist
 
       - name: Upload to App Store Connect
-        run: xcrun altool --upload-app --type ios -f "build/ios/ipa/algolia_search_client.ipa" -u "${{ secrets.apple_id }}" -p "${{ secrets.apple_app_pass }}"
+        run: xcrun altool --upload-app --type ios -f "build/ios/ipa/algolia_search_client.ipa" -u "${{ secrets.APPLE_ID }}" -p "${{ secrets.APPLE_APP_PASS }}"

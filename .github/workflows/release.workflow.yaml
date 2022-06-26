@@ -10,24 +10,12 @@ jobs:
   analyze-job:
     if: startsWith(github.head_ref, 'releases/')
     uses: ./.github/workflows/analyze.job.yaml
-    secrets:
-      algolia_application_id: ${{ secrets.APPLICATION_ID }}
-      algolia_api_key: ${{ secrets.API_KEY }}
   test-job:
     if: startsWith(github.head_ref, 'releases/')
     uses: ./.github/workflows/test.job.yaml
-    secrets:
-      algolia_application_id: ${{ secrets.APPLICATION_ID }}
-      algolia_api_key: ${{ secrets.API_KEY }}
   deliver-job:
     needs: [analyze-job, test-job]
     if: startsWith(github.head_ref, 'releases/')
     uses: ./.github/workflows/deliver.job.yaml
     secrets:
-      algolia_application_id: ${{ secrets.APPLICATION_ID }}
-      algolia_api_key: ${{ secrets.API_KEY }}
-      certificate_p12: ${{ secrets.CERTIFICATES_P12 }}
-      certificate_password: ${{ secrets.CERTIFICATE_PASSWORD }}
-      provisioning_profile: ${{ secrets.PROVISIONING_PROFILE }}
-      apple_id: ${{ secrets.APPLE_ID }}
-      apple_app_pass: ${{ secrets.APPLE_APP_PASS }}
+      secrets: inherit
