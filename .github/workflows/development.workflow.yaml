@@ -1,0 +1,13 @@
+name: workflow development
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    if: ${{ !startsWith(github.head_ref, 'releases/') }}
+    uses: ./.github/workflows/analyze.job.yaml
+  test:
+    if: ${{ !startsWith(github.head_ref, 'releases/') }}
+    uses: ./.github/workflows/test.job.yaml

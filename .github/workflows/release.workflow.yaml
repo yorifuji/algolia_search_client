@@ -1,0 +1,19 @@
+name: workflow release
+
+on:
+  pull_request:
+    types:
+      - opened
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    if: startsWith(github.head_ref, 'releases/')
+    uses: ./.github/workflows/analyze.job.yaml
+  test:
+    if: startsWith(github.head_ref, 'releases/')
+    uses: ./.github/workflows/test.job.yaml
+  deliver:
+    needs: [analyze, test]
+    if: startsWith(github.head_ref, 'releases/')
+    uses: ./.github/workflows/deliver.job.yaml
