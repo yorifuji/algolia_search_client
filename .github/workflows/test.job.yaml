@@ -2,6 +2,11 @@ name: job test
 
 on:
   workflow_call:
+    secrets:
+      algolia_application_id:
+        required: true
+      algolia_api_key:
+        required: true
 
 jobs:
   test:
@@ -14,8 +19,8 @@ jobs:
         shell: bash
         run: |
           touch .env
-          echo "APPLICATION_ID=${{ secrets.APPLICATION_ID }}" >> .env
-          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+          echo "APPLICATION_ID=${{ secrets.algolia_application_id }}" >> .env
+          echo "API_KEY=${{ secrets.algolia_api_key }}" >> .env
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:

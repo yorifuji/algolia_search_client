@@ -8,6 +8,12 @@ jobs:
   analyze-job:
     if: ${{ !startsWith(github.head_ref, 'releases/') }}
     uses: ./.github/workflows/analyze.job.yaml
+    secrets:
+      algolia_application_id: ${{ secrets.APPLICATION_ID }}
+      algolia_api_key: ${{ secrets.API_KEY }}
   test-job:
     if: ${{ !startsWith(github.head_ref, 'releases/') }}
     uses: ./.github/workflows/test.job.yaml
+    secrets:
+      algolia_application_id: ${{ secrets.APPLICATION_ID }}
+      algolia_api_key: ${{ secrets.API_KEY }}

@@ -2,6 +2,11 @@ name: job analyze
 
 on:
   workflow_call:
+    secrets:
+      algolia_application_id:
+        required: true
+      algolia_api_key:
+        required: true
 
 jobs:
   analyze:
