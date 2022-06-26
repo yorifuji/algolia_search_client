@@ -5,6 +5,7 @@ on:
 
 jobs:
   test:
+    name: test-xxxx
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:

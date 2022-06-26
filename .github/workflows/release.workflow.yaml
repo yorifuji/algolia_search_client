@@ -17,3 +17,6 @@ jobs:
     needs: [analyze, test]
     if: startsWith(github.head_ref, 'releases/')
     uses: ./.github/workflows/deliver.job.yaml
+    secrets:
+      certificate_p12: ${{ secrets.CERTIFICATES_P12 }}
+      certificate_password: ${{ secrets.CERTIFICATE_PASSWORD }}

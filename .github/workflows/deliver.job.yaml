@@ -2,6 +2,11 @@ name: job deliver
 
 on:
   workflow_call:
+    secrets:
+      certificate_p12:
+        required: true
+      certificate_password:
+        required: true
 
 jobs:
   deliver:
@@ -26,8 +31,8 @@ jobs:
       - name: Import Distribution Certificates
         uses: Apple-Actions/import-codesign-certs@v1
         with:
-          p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
-          p12-password: ${{ secrets.CERTIFICATE_PASSWORD }}
+          p12-file-base64: ${{ secrets.certificate_p12 }}
+          p12-password: ${{ secrets.certificate_password }}
 
       - name: Install Flutter
         uses: subosito/flutter-action@v2
