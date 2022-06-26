@@ -3,6 +3,7 @@ name: analyze
 on:
   pull_request:
   workflow_dispatch: # manual run
+  workflow_call:
 
 jobs:
   analyze:
