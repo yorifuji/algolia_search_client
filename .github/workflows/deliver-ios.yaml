@@ -9,9 +9,44 @@ on:
 jobs:
   ios:
     if: startsWith(github.head_ref, 'releases/')
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
-      - name: step1
-        run: echo "The head of this PR starts with 'releases/'"
-      - name: step2
-        run: echo end
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Create .env
+        shell: bash
+        run: |
+          touch .env
+          echo "APPLICATION_ID=${{ secrets.APPLICATION_ID }}" >> .env
+          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - name: Run flutter version
+        run: flutter --version
+
+      - name: Run flutter pub get
+        run: flutter pub get
+
+      - name: Import Provisioning Profile
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo -n ${{ secrets.PROVISIONING_PROFILE }} | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/distribution.mobileprovision
+
+      - name: Import Code-Signing Certificates
+        uses: Apple-Actions/import-codesign-certs@v1
+        with:
+          p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
+          p12-password: ${{ secrets.CERTIFICATE_PASSWORD }}
+
+      - name: Create ipa file
+        # run: flutter build ipa --export-options-plist=ExportOptions.plist --build-number ${GITHUB_RUN_NUMBER}
+        run: flutter build ipa
+
+      - name: Upload to AppStoreConnect
+        run: xcrun altool --upload-app -f "./build/ios/ipa/github_actios_sample.ipa" -u "${{ secrets.APPLE_ID }}" -p "${{ secrets.APPLE_APP_PASS }}"
