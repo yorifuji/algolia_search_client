@@ -2,7 +2,6 @@ name: job deliver
 
 on:
   workflow_call:
-    secrets:
 
 jobs:
   deliver:
