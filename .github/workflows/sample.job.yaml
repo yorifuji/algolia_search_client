@@ -1,0 +1,23 @@
+name: job sample
+
+on:
+  workflow_call:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run deployment process
+        # exit 0(success) or 1(fail)
+        run: exit 0
+
+      - name: Notify Slack
+        uses: 8398a7/action-slack@v3.8.0
+        with:
+          status: ${{ job.status }}
+          author_name: "notify slack sample"
+          fields: repo,message,commit,author,action,eventName,ref,workflow,pullRequest
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
+        if: always()
