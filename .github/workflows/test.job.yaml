@@ -34,4 +34,4 @@ jobs:
           SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
           SLACK_WEBHOOK: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
           SLACK_TITLE: Job
-          SLACK_MESSAGE: ${{ github.action }} ${{ github.job }}
+          SLACK_MESSAGE: ${{ github.job }}
