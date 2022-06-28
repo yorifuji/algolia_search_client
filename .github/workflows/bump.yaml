@@ -29,10 +29,12 @@ jobs:
         run: flutter --version
       - name: Run flutter pub get
         run: flutter pub get
-      - name: Run flutter pub run cider bump
+      - name: Bump
         run: |
           echo bump: ${{ github.event.inputs.bump }}
           flutter pub run cider bump ${{ github.event.inputs.bump }} --bump-build
+          echo "::set-output name=BUMP::$(echo Bump: `flutter pub run cider version`)"
+        id: bump
       - name: Git config
         run: |
           git config --local user.email "yorifuji@users.noreply.github.com"
@@ -41,7 +43,6 @@ jobs:
         run: |
           git add -u
           echo Bump: `flutter pub run cider version` | git commit -a --file=-
-          echo "::set-output name=BUMP::$(echo Bump: `flutter pub run cider version`)"
       - name: Make release branch
         run: |
           git checkout -b releases/`flutter pub run cider version`
@@ -55,4 +56,4 @@ jobs:
           branch: ${{ steps.branch.outputs.RELEASE_BRANCH }}
       - name: PR
         run: |
-          gh pr create -B main -t ${{ steps.branch.outputs.BUMP }} -b ""
+          gh pr create -B main -t ${{ steps.bump.outputs.BUMP }} -b ""
