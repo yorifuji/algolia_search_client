@@ -12,6 +12,10 @@ on:
           - minor
           - major
 
+env:
+  USER_EMAIL: "yorifuji@users.noreply.github.com"
+  USER_NAME: "github-actions[bot]"
+
 jobs:
   bump:
     runs-on: ubuntu-latest
@@ -34,28 +38,33 @@ jobs:
           echo bump: ${{ github.event.inputs.bump }}
           flutter pub run cider bump ${{ github.event.inputs.bump }} --bump-build
           echo "::set-output name=BUMP::$(echo Bump: `flutter pub run cider version`)"
+          echo "::set-output name=BUMP2::$(flutter pub run cider version)"
         id: bump
-      - name: Git config
+      - name: dump
         run: |
-          git config --local user.email "yorifuji@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-      - name: Commit
-        run: |
-          git add -u
-          echo Bump: `flutter pub run cider version` | git commit -a --file=-
-      - name: Make release branch
-        run: |
-          git checkout -b releases/`flutter pub run cider version`
-          echo "::set-output name=RELEASE_BRANCH::$(echo releases/`flutter pub run cider version`)"
-        id: branch
-      - name: Push
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # branch: ${{ github.ref }}
-          branch: ${{ steps.branch.outputs.RELEASE_BRANCH }}
-      - name: PR
-        run: |
-          gh pr create -B main -t "bump" -b "empty" --head ${{ steps.branch.outputs.RELEASE_BRANCH }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          echo "${{ steps.branch.outputs.BUMP }}"
+          echo "${{ steps.branch.outputs.BUMP2 }}"
+      # - name: Git config
+      #   run: |
+      #     git config --local user.email $USER_EMAIL
+      #     git config --local user.name $USER_NAME
+      # - name: Commit
+      #   run: |
+      #     git add -u
+      #     echo Bump: `flutter pub run cider version` | git commit -a --file=-
+      # - name: Make release branch
+      #   run: |
+      #     git checkout -b releases/`flutter pub run cider version`
+      #     echo "::set-output name=RELEASE_BRANCH::$(echo releases/`flutter pub run cider version`)"
+      #   id: branch
+      # - name: Push
+      #   uses: ad-m/github-push-action@master
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     # branch: ${{ github.ref }}
+      #     branch: ${{ steps.branch.outputs.RELEASE_BRANCH }}
+      # - name: PR
+      #   run: |
+      #     gh pr create -B main -t "bump" -b "empty" --head ${{ steps.branch.outputs.RELEASE_BRANCH }}
+      #   env:
+      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
