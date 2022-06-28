@@ -29,6 +29,7 @@ jobs:
         run: flutter analyze
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
+        if: always()
         env:
           SLACK_CHANNEL: github-actions
           SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
