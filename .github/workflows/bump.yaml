@@ -41,6 +41,7 @@ jobs:
         run: |
           git add -u
           echo Bump: `flutter pub run cider version` | git commit -a --file=-
+          echo "::set-output name=BUMP::$(echo Bump: `flutter pub run cider version`)"
       - name: Make release branch
         run: |
           git checkout -b releases/`flutter pub run cider version`
@@ -52,3 +53,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           # branch: ${{ github.ref }}
           branch: ${{ steps.branch.outputs.RELEASE_BRANCH }}
+      - name: PR
+        run: |
+          gh pr create -B main -t ${{ steps.branch.outputs.BUMP }} -b ""
