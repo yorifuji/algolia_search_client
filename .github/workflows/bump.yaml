@@ -1,0 +1,54 @@
+name: bump
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        type: choice
+        description: bump
+        options:
+          - major
+          - minor
+          - patch
+          - build
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
+          fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+      - name: Run flutter version
+        run: flutter --version
+      - name: Run flutter pub get
+        run: flutter pub get
+      - name: Run flutter pub run cider bump
+        run: |
+          echo bump: ${{ github.event.inputs.bump }}
+          flutter pub run cider bump ${{ github.event.inputs.bump }}
+      - name: Git config
+        run: |
+          git config --local user.email "yorifuji@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+      - name: Commit
+        run: |
+          git add -u
+          echo Bump: `flutter pub run cider version` | git commit -a --file=-
+      - name: Make release branch
+        run: |
+          git checkout -b releases/`flutter pub run cider version`
+          echo "::set-output name=RELEASE_BRANCH::$(echo releases/`flutter pub run cider version`)"
+        id: branch
+      - name: Push
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # branch: ${{ github.ref }}
+          branch: ${{ steps.branch.outputs.RELEASE_BRANCH }}
