@@ -1,36 +1,60 @@
-name: Manual Deploy
+name: workflow deliver
 
 on:
   workflow_dispatch:
     inputs:
-      target:
+      bump:
         type: choice
-        description: Deploy target
+        description: bump
         options:
-          - dev1
-          - dev2
-          - prod
-      message:
-        required: true
-        default: "Write some messsage here"
-      dryrun:
-        type: boolean
-        description: Is dryrun?
-        default: true
-      environment:
-        type: environment
+          - major
+          - minor
+          - patch
+          - build
 
 jobs:
-  deploy:
+  bump-major:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
-
+    if: ${{ github.event.inputs.bump == 'major' }}
     steps:
-      - name: Show inputs
+      - run: echo "${{ github.event.inputs.bump }}"
+
+  bump-minor:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.bump == 'minor' }}
+    steps:
+      - run: echo "${{ github.event.inputs.bump }}"
+
+  bump-patch:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.bump == 'patch' }}
+    steps:
+      - run: echo "${{ github.event.inputs.bump }}"
+
+  bump-build:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.bump == 'build' }}
+    steps:
+      - run: echo "${{ github.event.inputs.bump }}"
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
+          fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
+      - name: Create local changes
         run: |
-          echo "target: ${{ github.event.inputs.target }}"
-          echo "message: ${{ github.event.inputs.message }}"
-          echo "dryrun: ${{ github.event.inputs.dryrun }}"
-      - name: Deploy (use environemt secrets)
+          touch test111.tmp
+      - name: Commit files
         run: |
-          echo "Deploy target server: ${{ secrets.ENV_SERVER }}"
+          git config --local user.email "yorifuji@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add test111.tmp
+          git commit -m "Add changes" -a
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
