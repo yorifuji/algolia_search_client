@@ -42,8 +42,8 @@ jobs:
         id: bump
       - name: dump
         run: |
-          echo "${{ steps.branch.outputs.BUMP }}"
-          echo "${{ steps.branch.outputs.BUMP2 }}"
+          echo "${{ steps.bump.outputs.BUMP }}"
+          echo "${{ steps.bump.outputs.BUMP2 }}"
       # - name: Git config
       #   run: |
       #     git config --local user.email $USER_EMAIL
