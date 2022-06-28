@@ -7,10 +7,10 @@ on:
         type: choice
         description: bump
         options:
-          - major
-          - minor
-          - patch
           - build
+          - patch
+          - minor
+          - major
 
 jobs:
   bump:
@@ -32,7 +32,7 @@ jobs:
       - name: Run flutter pub run cider bump
         run: |
           echo bump: ${{ github.event.inputs.bump }}
-          flutter pub run cider bump ${{ github.event.inputs.bump }}
+          flutter pub run cider bump ${{ github.event.inputs.bump }} --bump-build
       - name: Git config
         run: |
           git config --local user.email "yorifuji@users.noreply.github.com"
