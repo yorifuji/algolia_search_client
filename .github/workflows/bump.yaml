@@ -52,8 +52,7 @@ jobs:
       - name: Make release branch
         run: |
           git checkout -b releases/$BUMP_VERSION
-          echo "::set-output name=RELEASE_BRANCH::$(echo releases/${{ steps.bump.outputs.BUMP_VERSION }})"
-          echo "${{ steps.branch.outputs.RELEASE_BRANCH }}"
+          echo "::set-output name=RELEASE_BRANCH::releases/$BUMP_VERSION"
         id: branch
         env:
           BUMP_VERSION: ${{ steps.bump.outputs.BUMP_VERSION }}
@@ -64,6 +63,8 @@ jobs:
           branch: ${{ steps.branch.outputs.RELEASE_BRANCH }}
       - name: PR
         run: |
+          echo "${{ steps.branch.outputs.RELEASE_BRANCH }}"
+          echo "$BUMP_VERSION"
           gh pr create -B main -t "$BUMP_VERSION" -b "$BUMP_VERSION" --head $RELEASE_BRANCH
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
