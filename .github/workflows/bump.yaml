@@ -37,8 +37,8 @@ jobs:
         run: |
           echo choice: ${{ github.event.inputs.bump }}
           flutter pub run cider bump ${{ github.event.inputs.bump }} --bump-build
-          echo "::set-output name=VERSION::$(flutter pub run cider version)"
-          echo "${{ steps.bump.outputs.VERSION }}"
+          echo "::set-output name=BUMP_VERSION::$(flutter pub run cider version)"
+          echo "${{ steps.bump.outputs.BUMP_VERSION }}"
         id: bump
       - name: Git config
         run: |
@@ -49,14 +49,15 @@ jobs:
       - name: Commit
         run: |
           git add -u
-          echo "Bump: ${{ steps.bump.outputs.VERSION }}" | git commit -a --file=-
+          echo "Bump: ${{ steps.bump.outputs.BUMP_VERSION }}" | git commit -a --file=-
       - name: Make release branch
         run: |
-          git checkout -b releases/`echo ${{ steps.bump.outputs.VERSION }}`
-          echo "::set-output name=RELEASE_BRANCH::$(echo releases/${{ steps.bump.outputs.VERSION }})"
+          git checkout -b releases/$BUMP_VERSION
+          echo "::set-output name=RELEASE_BRANCH::$(echo releases/${{ steps.bump.outputs.BUMP_VERSION }})"
           echo "${{ steps.branch.outputs.RELEASE_BRANCH }}"
         id: branch
-      # - name: Push
+        env:
+          BUMP_VERSION: ${{ steps.bump.outputs.BUMP_VERSION }}
       #   uses: ad-m/github-push-action@master
       #   with:
       #     github_token: ${{ secrets.GITHUB_TOKEN }}
