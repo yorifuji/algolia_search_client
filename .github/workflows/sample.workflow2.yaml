@@ -1,0 +1,12 @@
+name: workflow sample
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  sample:
+    uses: ./.github/workflows/sample.job.yaml
+    secrets: inherit
