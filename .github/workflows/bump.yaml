@@ -63,7 +63,7 @@ jobs:
           branch: ${{ steps.branch.outputs.RELEASE_BRANCH }}
       - name: PR
         run: |
-          gh pr create -B main -t "$BUMP_VERSION" -b "$BUMP_VERSION" --head $RELEASE_BRANCH
+          gh pr create -B main -t "Release $BUMP_VERSION" -b "$BUMP_VERSION" --head $RELEASE_BRANCH
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BUMP_VERSION: ${{ steps.bump.outputs.BUMP_VERSION }}
