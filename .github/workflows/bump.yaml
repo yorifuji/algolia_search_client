@@ -38,10 +38,10 @@ jobs:
           echo choice: ${{ github.event.inputs.bump }}
           flutter pub run cider bump ${{ github.event.inputs.bump }} --bump-build
           echo "::set-output name=BUMP_VERSION::$(flutter pub run cider version)"
-          echo "${{ steps.bump.outputs.BUMP_VERSION }}"
         id: bump
       - name: Git config
         run: |
+          echo "${{ steps.bump.outputs.BUMP_VERSION }}"
           git config --local user.email $USER_EMAIL
           git config --local user.name $USER_NAME
           git config user.email
@@ -58,6 +58,7 @@ jobs:
         id: branch
         env:
           BUMP_VERSION: ${{ steps.bump.outputs.BUMP_VERSION }}
+      # - name: Push
       #   uses: ad-m/github-push-action@master
       #   with:
       #     github_token: ${{ secrets.GITHUB_TOKEN }}
