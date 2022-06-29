@@ -42,8 +42,10 @@ jobs:
         id: bump
       - name: Git config
         run: |
-          git config --local user.email `echo $USER_EMAIL`
-          git config --local user.name `echo $USER_NAME`
+          git config --local user.email $USER_EMAIL
+          git config --local user.name $USER_NAME
+          git config user.email
+          git config user.name
       - name: Commit
         run: |
           git add -u
