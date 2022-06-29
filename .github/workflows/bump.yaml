@@ -35,11 +35,11 @@ jobs:
         run: flutter pub get
       - name: Bump
         run: |
-          echo bump: ${{ github.event.inputs.bump }}
+          echo choice: ${{ github.event.inputs.bump }}
           flutter pub run cider bump ${{ github.event.inputs.bump }} --bump-build
           echo "::set-output name=VERSION::$(flutter pub run cider version)"
           echo "${{ steps.bump.outputs.VERSION }}"
-          touch "${{ steps.bump.outputs.VERSION }}"
+          touch ${steps.bump.outputs.VERSION}
           ls
         id: bump
       # - name: Git config
