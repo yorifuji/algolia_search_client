@@ -50,7 +50,7 @@ jobs:
           echo "Bump: ${{ steps.bump.outputs.VERSION }}" | git commit -a --file=-
       - name: Make release branch
         run: |
-          git checkout -b releases/${steps.bump.outputs.VERSION}
+          git checkout -b releases/`echo ${{ steps.bump.outputs.VERSION }}`
           echo "::set-output name=RELEASE_BRANCH::$(echo releases/${{ steps.bump.outputs.VERSION }})"
           echo "${{ steps.branch.outputs.RELEASE_BRANCH }}"
         id: branch
