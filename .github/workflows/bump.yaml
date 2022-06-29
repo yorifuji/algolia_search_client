@@ -34,7 +34,7 @@ jobs:
         run: flutter --version
       - name: Run flutter pub get
         run: flutter pub get
-      - name: Bump
+      - name: Bump project version
         run: |
           echo choice: ${{ github.event.inputs.bump }}
           flutter pub run cider bump ${{ github.event.inputs.bump }} --bump-build
@@ -46,23 +46,23 @@ jobs:
           git config --local user.name $USER_NAME
           git config user.email
           git config user.name
-      - name: Commit
+      - name: Commit Version
         run: |
           git add -u
           echo "Bump: ${{ steps.bump.outputs.BUMP_VERSION }}" | git commit -a --file=-
-      - name: Make release branch
+      - name: Make Release Branch
         run: |
           git checkout -b releases/$BUMP_VERSION
           echo "::set-output name=RELEASE_BRANCH::releases/$BUMP_VERSION"
         id: branch
         env:
           BUMP_VERSION: ${{ steps.bump.outputs.BUMP_VERSION }}
-      - name: Push
+      - name: Push Branch
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ steps.branch.outputs.RELEASE_BRANCH }}
-      - name: PR
+      - name: Create Pull Request
         run: |
           gh pr create -B main -t "Release $BUMP_VERSION" -b "$BUMP_VERSION" --head $RELEASE_BRANCH
         env:
