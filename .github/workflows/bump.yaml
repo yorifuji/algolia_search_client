@@ -1,0 +1,71 @@
+name: bump
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        type: choice
+        description: bump
+        options:
+          - build
+          - patch
+          - minor
+          - major
+
+env:
+  USER_EMAIL: "yorifuji@users.noreply.github.com"
+  USER_NAME: "github-actions[bot]"
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
+          fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+      - name: Run flutter version
+        run: flutter --version
+      - name: Run flutter pub get
+        run: flutter pub get
+      - name: Bump
+        run: |
+          echo choice: ${{ github.event.inputs.bump }}
+          flutter pub run cider bump ${{ github.event.inputs.bump }} --bump-build
+          echo "::set-output name=BUMP_VERSION::$(flutter pub run cider version)"
+        id: bump
+      - name: Git config
+        run: |
+          git config --local user.email $USER_EMAIL
+          git config --local user.name $USER_NAME
+          git config user.email
+          git config user.name
+      - name: Commit
+        run: |
+          git add -u
+          echo "Bump: ${{ steps.bump.outputs.BUMP_VERSION }}" | git commit -a --file=-
+      - name: Make release branch
+        run: |
+          git checkout -b releases/$BUMP_VERSION
+          echo "::set-output name=RELEASE_BRANCH::releases/$BUMP_VERSION"
+        id: branch
+        env:
+          BUMP_VERSION: ${{ steps.bump.outputs.BUMP_VERSION }}
+      - name: Push
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ steps.branch.outputs.RELEASE_BRANCH }}
+      - name: PR
+        run: |
+          gh pr create -B main -t "Release $BUMP_VERSION" -b "$BUMP_VERSION" --head $RELEASE_BRANCH
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BUMP_VERSION: ${{ steps.bump.outputs.BUMP_VERSION }}
+          RELEASE_BRANCH: ${{ steps.branch.outputs.RELEASE_BRANCH }}
