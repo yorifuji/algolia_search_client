@@ -5,17 +5,25 @@ on:
     types: [submitted]
 
 jobs:
-  approved:
+  approved-check:
     if: |
       github.event.review.state == 'approved' &&
       contains(github.event.pull_request.labels.*.name, 'approved') == false
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - run: |
           echo "This PR was approved1"
           echo "This PR was approved2"
           echo ${{ github.event.review.state }}
 
+  next-job:
+    needs: [approved-check]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: next job
+        run: echo run next job
 # on:
 #   pull_request_review:
 #     types: [submitted]
@@ -39,10 +47,10 @@ jobs:
 #       - name: Add approved
 #         run: echo Add approved
 
-#   next-job:
-#     needs: [approve-check]
-#     runs-on: ubuntu-latest
-#     timeout-minutes: 30
-#     steps:
-#       - name: next job
-#         run: echo run next job
+# next-job:
+#   needs: [approve-check]
+#   runs-on: ubuntu-latest
+#   timeout-minutes: 30
+#   steps:
+#     - name: next job
+#       run: echo run next job
