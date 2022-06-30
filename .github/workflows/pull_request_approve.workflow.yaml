@@ -16,6 +16,7 @@ jobs:
           echo "This PR was approved1"
           echo "This PR was approved2"
           echo ${{ github.event.review.state }}
+          exit 0
 
   next-job:
     needs: [approved-check]
