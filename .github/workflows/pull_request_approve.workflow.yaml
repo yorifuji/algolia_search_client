@@ -3,30 +3,40 @@ name: workflow pull request review approve
 on:
   pull_request_review:
     types: [submitted]
-  workflow_dispatch:
 
 jobs:
-  approve-check:
+  approved:
+    if: github.event.review.state == 'approved'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    if: |
-      startsWith(github.head_ref, 'releases/') &&
-      github.event.review.state == 'approved' &&
-      contains(github.event.pull_request.labels.*.name, 'approved') == false
     steps:
-      - name: Label when approved
-        uses: pullreminders/label-when-approved-action@master
-        env:
-          APPROVALS: "1"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ADD_LABEL: "approved"
-      - name: Add approved
-        run: echo Add approved
+      - run: echo "This PR was approved"
+# on:
+#   pull_request_review:
+#     types: [submitted]
+#   workflow_dispatch:
 
-  next-job:
-    needs: [approve-check]
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - name: next job
-        run: echo run next job
+# jobs:
+#   approve-check:
+#     runs-on: ubuntu-latest
+#     timeout-minutes: 30
+#     if: |
+#       startsWith(github.head_ref, 'releases/') &&
+#       github.event.review.state == 'approved' &&
+#       contains(github.event.pull_request.labels.*.name, 'approved') == false
+#     steps:
+#       - name: Label when approved
+#         uses: pullreminders/label-when-approved-action@master
+#         env:
+#           APPROVALS: "1"
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#           ADD_LABEL: "approved"
+#       - name: Add approved
+#         run: echo Add approved
+
+#   next-job:
+#     needs: [approve-check]
+#     runs-on: ubuntu-latest
+#     timeout-minutes: 30
+#     steps:
+#       - name: next job
+#         run: echo run next job
