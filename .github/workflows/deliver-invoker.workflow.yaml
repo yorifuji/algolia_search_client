@@ -2,7 +2,7 @@ name: workflow invoker for deliver
 
 on:
   pull_request_review:
-    types: [submitted]
+    types: [submitted, edited]
 
 jobs:
   # debug:
