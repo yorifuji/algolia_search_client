@@ -51,5 +51,5 @@ jobs:
 
   deliver-ios:
     needs: [label]
-    uses: ./.github/workflows/deliver.ios.job.yaml
+    uses: ./.github/workflows/sample.job.yaml
     secrets: inherit
