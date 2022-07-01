@@ -49,7 +49,15 @@ jobs:
       - name: next job
         run: echo run next job
 
-  deliver-ios:
+  # deliver-ios:
+  #   needs: [label]
+  #   uses: ./.github/workflows/sample.job.yaml
+  #   secrets: inherit
+
+  analyze-job:
     needs: [label]
-    uses: ./.github/workflows/sample.job.yaml
+    uses: ./.github/workflows/analyze.job.yaml
+    secrets: inherit
+  test-job:
+    uses: ./.github/workflows/test.job.yaml
     secrets: inherit
