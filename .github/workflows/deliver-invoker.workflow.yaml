@@ -1,0 +1,31 @@
+name: workflow invoker for deliver
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  approved-check:
+    if: |
+      startsWith(github.head_ref, 'releases/') &&
+      github.event.review.state == 'approved' &&
+      contains(github.event.pull_request.labels.*.name, 'deliver-done') == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Add Label when approved
+        uses: pullreminders/label-when-approved-action@master
+        env:
+          APPROVALS: "1"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADD_LABEL: "deliver-done"
+      - name: Invoke next job
+        run: exit 0
+
+  next-job:
+    needs: [approved-check]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: next job
+        run: echo run next job
