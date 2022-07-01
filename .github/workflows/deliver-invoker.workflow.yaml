@@ -51,6 +51,5 @@ jobs:
 
   deliver-ios:
     needs: [label]
-    if: startsWith(github.head_ref, 'releases/')
     uses: ./.github/workflows/deliver.ios.job.yaml
     secrets: inherit
