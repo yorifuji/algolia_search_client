@@ -5,19 +5,10 @@ on:
     types: [submitted]
 
 jobs:
-  approved-check:
-    if: |
-      github.event.review.state == 'approved' &&
-      contains(github.event.pull_request.labels.*.name, 'deliver-done') == false
+  debug:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Add Label when approved
-        uses: pullreminders/label-when-approved-action@master
-        env:
-          APPROVALS: "1"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ADD_LABEL: "deliver-done"
       - name: debug
         run: |
           echo head ${{ github.event.review }}
@@ -27,8 +18,30 @@ jobs:
       - name: Invoke next job
         run: exit 0
 
-  next-job:
-    needs: [approved-check]
+  check:
+    if: |
+      startsWith(github.event.pull_request.head.ref, 'releases/') &&
+      github.event.review.state == 'approved' &&
+      contains(github.event.pull_request.labels.*.name, 'ready-deliver') == false
+    timeout-minutes: 30
+    steps:
+      - name: Invoke labbel
+        run: exit 0
+
+  label:
+    needs: [check]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Add Label when approved
+        uses: pullreminders/label-when-approved-action@master
+        env:
+          APPROVALS: "1"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADD_LABEL: "ready-deliver"
+
+  deliver:
+    needs: [label]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
