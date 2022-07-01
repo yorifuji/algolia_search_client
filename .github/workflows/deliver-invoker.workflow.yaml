@@ -19,8 +19,8 @@ jobs:
   #       run: exit 0
 
   check:
-    # runs-on: ubuntu-latest
-    # timeout-minutes: 30
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
     if: |
       startsWith(github.event.pull_request.head.ref, 'releases/') &&
       github.event.review.state == 'approved' &&
