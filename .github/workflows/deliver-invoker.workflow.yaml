@@ -60,5 +60,5 @@ jobs:
   #   secrets: inherit
 
   test-job:
-    uses: ./.github/workflows/test.job.yaml
+    uses: yorifuji/algolia_search_client/.github/workflows/test.job.yaml
     secrets: inherit
