@@ -19,7 +19,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ADD_LABEL: "deliver-done"
       - name: debug
-        run: head ${{ github.head_ref }}
+        run: echo head ${{ github.head_ref }}
       - name: Invoke next job
         run: exit 0
 
