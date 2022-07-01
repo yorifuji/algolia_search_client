@@ -5,27 +5,28 @@ on:
     types: [submitted]
 
 jobs:
-  debug:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - name: debug
-        run: |
-          echo head ${{ github.event.review }}
-          echo head ${{ github.event.pull_request }}
-          echo head ${{ github.event.pull_request.head.ref }}
-          echo head ${{ github.event.pull_request.base.ref }}
-      - name: Invoke next job
-        run: exit 0
+  # debug:
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 30
+  #   steps:
+  #     - name: debug
+  #       run: |
+  #         echo head ${{ github.event.review }}
+  #         echo head ${{ github.event.pull_request }}
+  #         echo head ${{ github.event.pull_request.head.ref }}
+  #         echo head ${{ github.event.pull_request.base.ref }}
+  #     - name: Invoke next job
+  #       run: exit 0
 
   check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
     if: |
       startsWith(github.event.pull_request.head.ref, 'releases/') &&
       github.event.review.state == 'approved' &&
       contains(github.event.pull_request.labels.*.name, 'ready-deliver') == false
-    timeout-minutes: 30
     steps:
-      - name: Invoke labbel
+      - name: Invoke label
         run: exit 0
 
   label:
@@ -33,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Add Label when approved
+      - name: Add Label
         uses: pullreminders/label-when-approved-action@master
         env:
           APPROVALS: "1"
@@ -47,3 +48,9 @@ jobs:
     steps:
       - name: next job
         run: echo run next job
+
+  deliver-ios:
+    needs: [label]
+    if: startsWith(github.head_ref, 'releases/')
+    uses: ./.github/workflows/deliver.ios.job.yaml
+    secrets: inherit
