@@ -19,10 +19,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ADD_LABEL: "deliver-done"
       - name: debug
-        run: echo head ${{ github.event.review }}
-        run: echo head ${{ github.event.pull_request }}
-        run: echo head ${{ github.event.pull_request.head.ref }}
-        run: echo head ${{ github.event.pull_request.base.ref }}
+        run: |
+          echo head ${{ github.event.review }}
+          echo head ${{ github.event.pull_request }}
+          echo head ${{ github.event.pull_request.head.ref }}
+          echo head ${{ github.event.pull_request.base.ref }}
       - name: Invoke next job
         run: exit 0
 
