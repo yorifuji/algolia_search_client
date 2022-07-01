@@ -68,7 +68,9 @@ jobs:
   #   uses: yorifuji/algolia_search_client/.github/workflows/analyze.job.yaml@main
   #   secrets: inherit
 
-  test-job:
+  # use absolute path for uses
+  # https://github.com/orgs/github-community/discussions/14306
+  deliver-ios:
     needs: [label]
-    uses: yorifuji/algolia_search_client/.github/workflows/test.job.yaml@main
+    uses: yorifuji/algolia_search_client/.github/workflows/deliver.ios.job.yaml@main
     secrets: inherit
