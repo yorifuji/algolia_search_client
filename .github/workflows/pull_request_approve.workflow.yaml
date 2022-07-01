@@ -12,11 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - run: |
-          echo "This PR was approved1"
-          echo "This PR was approved2"
-          echo ${{ github.event.review.state }}
-          exit 0
+      - name: Label when approved
+        uses: pullreminders/label-when-approved-action@master
+        env:
+          APPROVALS: "1"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADD_LABEL: "approved"
+      - name: Add approved
+        run: echo Add approved
+      - run: exit 0
 
   next-job:
     needs: [approved-check]
