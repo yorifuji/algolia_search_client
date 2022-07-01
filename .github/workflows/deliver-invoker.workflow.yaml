@@ -58,6 +58,7 @@ jobs:
   #   needs: [label]
   #   uses: ./.github/workflows/analyze.job.yaml
   #   secrets: inherit
-  # test-job:
-  #   uses: ./.github/workflows/test.job.yaml
-  #   secrets: inherit
+
+  test-job:
+    uses: ./.github/workflows/test.job.yaml
+    secrets: inherit
