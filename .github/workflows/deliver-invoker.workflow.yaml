@@ -59,13 +59,13 @@ jobs:
   #   uses: ./.github/workflows/analyze.job.yaml
   #   secrets: inherit
 
-  # test-job:
-  #   uses: ./.github/workflows/test.job.yaml
-  #   secrets: inherit
+  test-job:
+    uses: ./.github/workflows/analyze.job.yaml
+    secrets: inherit
 
-  reusable_workflow_job:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - uses: ./.github/workflows/test.job.yaml
+  # reusable_workflow_job:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #     - uses: ./.github/workflows/test.job.yaml
