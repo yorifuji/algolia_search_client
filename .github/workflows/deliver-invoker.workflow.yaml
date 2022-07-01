@@ -63,13 +63,12 @@ jobs:
   #   uses: ./.github/workflows/analyze.job.yaml
   #   secrets: inherit
 
-  test-job:
-    uses: yorifuji/algolia_search_client/.github/workflows/analyze.job.yaml@main
-    secrets: inherit
+  # OK
+  # test-job:
+  #   uses: yorifuji/algolia_search_client/.github/workflows/analyze.job.yaml@main
+  #   secrets: inherit
 
-  # reusable_workflow_job:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
-  #     - uses: ./.github/workflows/test.job.yaml
+  test-job:
+    needs: [label]
+    uses: yorifuji/algolia_search_client/.github/workflows/test.job.yaml@main
+    secrets: inherit
