@@ -1,4 +1,4 @@
-name: workflow release
+name: workflow for release branch
 
 on:
   pull_request:

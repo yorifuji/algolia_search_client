@@ -1,23 +1,10 @@
-name: workflow invoker for deliver
+name: workflow for deliver
 
 on:
   pull_request_review:
     types: [submitted]
 
 jobs:
-  # debug:
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 30
-  #   steps:
-  #     - name: debug
-  #       run: |
-  #         echo head ${{ github.event.review }}
-  #         echo head ${{ github.event.pull_request }}
-  #         echo head ${{ github.event.pull_request.head.ref }}
-  #         echo head ${{ github.event.pull_request.base.ref }}
-  #     - name: Invoke next job
-  #       run: exit 0
-
   check:
     runs-on: ubuntu-latest
     timeout-minutes: 30

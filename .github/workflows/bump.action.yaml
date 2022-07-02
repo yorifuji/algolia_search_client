@@ -13,8 +13,8 @@ on:
           - major
 
 env:
-  USER_EMAIL: "yorifuji@users.noreply.github.com"
-  USER_NAME: "github-actions[bot]"
+  GIT_USER_EMAIL: "yorifuji@users.noreply.github.com"
+  GIT_USER_NAME: "github-actions[bot]"
 
 jobs:
   bump:
@@ -42,8 +42,8 @@ jobs:
           echo "::set-output name=BUMP_VERSION::$(flutter pub run cider version)"
       - name: Init Git config
         run: |
-          git config --local user.email $USER_EMAIL
-          git config --local user.name $USER_NAME
+          git config --local user.name $GIT_USER_NAME
+          git config --local user.email $GIT_USER_EMAIL
       - name: Git Commit Version
         run: |
           git add -u
@@ -63,6 +63,8 @@ jobs:
       - name: Git Create Pull Request
         run: |
           gh pr create -B main -t "Release $BUMP_VERSION" -b "Release $BUMP_VERSION" --head $RELEASE_BRANCH
+          echo BUMP_VERSION: ${{ steps.bump.outputs.BUMP_VERSION }}
+          echo RELEASE_BRANCH: ${{ steps.branch.outputs.RELEASE_BRANCH }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BUMP_VERSION: ${{ steps.bump.outputs.BUMP_VERSION }}
