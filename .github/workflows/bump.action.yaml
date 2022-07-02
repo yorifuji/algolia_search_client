@@ -62,12 +62,10 @@ jobs:
           branch: ${{ steps.branch.outputs.RELEASE_BRANCH }}
       - name: Git Create Pull Request
         run: |
-          # gh pr create -B main -t "Release $BUMP_VERSION" -b "Release $BUMP_VERSION" --head $RELEASE_BRANCH
           gh pr create -B main -t "Release ${{ steps.bump.outputs.BUMP_VERSION }}" -b "Release $BUMP_VERSION" --head releases/${{ steps.bump.outputs.BUMP_VERSION }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BUMP_VERSION: ${{ steps.bump.outputs.BUMP_VERSION }}
-          # RELEASE_BRANCH: ${{ steps.branch.outputs.RELEASE_BRANCH }}
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
         if: always()
