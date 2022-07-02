@@ -17,7 +17,7 @@ jobs:
         run: exit 0
 
   label:
-    needs: [check]
+    needs: check
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -31,6 +31,6 @@ jobs:
   # use absolute path for uses
   # https://github.com/orgs/github-community/discussions/14306
   deliver-ios:
-    needs: [label]
+    needs: label
     uses: yorifuji/algolia_search_client/.github/workflows/deliver.ios.job.yaml@main
     secrets: inherit
